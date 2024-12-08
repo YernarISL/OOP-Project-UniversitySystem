@@ -10,11 +10,25 @@ public class RegistryView {
 		System.out.println("===========================================================");
 		System.out.println("1.Student\n2.Teacher\n3.Manager");
 	}
-	
-	public void teacherRegistry() {
+
+	public String enterFullName() {	
 		System.out.println("Enter your fullname: ");
-		String fullName = in.nextLine();
-		System.out.println("Password: ");
-		String password = in.nextLine();
+		return in.nextLine();
 	}
+	
+	public String enterUsername() {
+		System.out.println("Enter your username: ");
+		return in.nextLine();
+	}
+	
+	public String enterPassword() {
+		System.out.println("Enter your password: ");
+		return in.nextLine();
+	}
+	
+	public String enterDateBirth() {
+		System.out.println("Enter your date of birth: ");
+		return in.nextLine();
+	}
+	
 }
