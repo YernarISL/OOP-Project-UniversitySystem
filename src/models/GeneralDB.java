@@ -10,23 +10,30 @@ import java.io.Serializable;
 import java.util.Vector;
 
 public class GeneralDB implements Serializable {
-	private static final long serialVersionUID = 1L;
+
 	private static String filePath = "C:\\Users\\Ernar\\eclipse-workspace\\alphaWSP\\data\\";
 	
 	public static Vector<Teacher> teachers = new Vector<Teacher>();
+	public static Vector<Student> students = new Vector<Student>();
+	public static Vector<Manager> managers = new Vector<Manager>();
+	public static Vector<Course> courses = new Vector<Course>();
 	
 	public static void saveTeachers() {
 		GeneralDB.serialize(teachers, "teachersList.txt");
 	}
 	
+	public static void saveStudents() {
+		GeneralDB.serialize(students, "studentsList.txt");
+	}
+	
 	public static void serialize(Object data, String fileName) {
 		FileOutputStream fos;
 		try {
-			fos = new FileOutputStream(filePath + fileName);
+			fos = new FileOutputStream(getFilePath() + fileName);
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			oos.writeObject(data);
-			oos.close();
 			
+			oos.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -37,7 +44,7 @@ public class GeneralDB implements Serializable {
 	public static Object deserialize(String fileName) {
 		FileInputStream fis;
 		try {
-			fis = new FileInputStream(filePath = fileName);
+			fis = new FileInputStream(getFilePath() + fileName);
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			Object result = ois.readObject();
 			ois.close();
@@ -52,10 +59,6 @@ public class GeneralDB implements Serializable {
 	
 	public static String getFilePath() {
 		return filePath;
-	}
-
-	public static void setFilePath(String filePath) {
-		GeneralDB.filePath = filePath;
 	}
 
 }

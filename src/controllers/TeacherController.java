@@ -1,62 +1,31 @@
 package controllers;
 
 import java.util.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.Vector;
 
 import models.Teacher;
 import models.GeneralDB;
-import models.InputValidation;
-import views.RegistryView;
+import views.TeacherView;
 
-public class TeacherController implements InputValidation {
-	private RegistryView registryView;  
-	SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+public class TeacherController { 
+	private TeacherView teacherView;
 	
-	public TeacherController(RegistryView registryView) {
-		this.registryView = registryView;
+	public TeacherController(TeacherView teacherView) {
+		this.teacherView = teacherView;
 	}
 	
-	public void createTeacher(String fullName, String dateInput, String username, String password) {
-		Teacher teacher = new Teacher(username, password, fullName, new Date(1, 2, 2021));
-		GeneralDB.teachers.add(teacher);
+	public void createTeacher(String fullName, Date dateInput, String username, String password) {
+		Teacher newTeacher = new Teacher(username, password, fullName, dateInput);
+		GeneralDB.teachers.add(newTeacher);
+		GeneralDB.saveTeachers();
 	}
 	
-	public Date getValidDate(String dateInput) {
-		try {
-			Date date = formatter.parse(dateInput);
-			return date;
-		} catch (ParseException e){
-			System.out.println("Invalid input. Example: 04-01-2021.\nPlease try again.");
-		}
-		return null;
-	}
-
-	
-	@Override
-	public void validateDate() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean validatePassword(String password) {
-		if (password.length() >= 12) {
-			return true;
-		} else return false;
-		
-	}
-
-	@Override
-	public boolean validateUsername(String username) {
-		return false;
-		
-	}
-
-	@Override
-	public boolean validateFullName(String fullName) {
-		return false;
-		
+	public void updateTeacherView() {
+		Vector<Teacher> teachers = (Vector<Teacher>) getTeachers();
+		teacherView.displayTeacher(teachers);
 	}
 	
+	public Object getTeachers() {
+		return GeneralDB.deserialize("teachersList.txt");
+	}
 }
