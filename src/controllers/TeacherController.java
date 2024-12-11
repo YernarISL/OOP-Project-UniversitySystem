@@ -3,6 +3,7 @@ package controllers;
 import java.util.Date;
 import java.util.Vector;
 
+
 import models.Teacher;
 import models.GeneralDB;
 import views.TeacherView;
@@ -18,14 +19,15 @@ public class TeacherController {
 		Teacher newTeacher = new Teacher(username, password, fullName, dateInput);
 		GeneralDB.teachers.add(newTeacher);
 		GeneralDB.saveTeachers();
-	}
-	
-	public void updateTeacherView() {
-		Vector<Teacher> teachers = (Vector<Teacher>) getTeachers();
-		teacherView.displayTeacher(teachers);
+		
 	}
 	
 	public Object getTeachers() {
 		return GeneralDB.deserialize("teachersList.txt");
+	}
+	
+	public void updateView() {
+		Vector<Teacher> teachers = (Vector<Teacher>) getTeachers();
+		teacherView.displayTeachers(teachers);
 	}
 }

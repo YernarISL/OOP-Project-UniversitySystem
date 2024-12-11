@@ -10,7 +10,11 @@ public class TeacherView {
 		
 	}
 	
-	public void displayTeacher(Vector<Teacher> teachers) {
+	public void teacherMenu() {
+		System.out.println();
+	}
+	
+	public void displayTeachers(Vector<Teacher> teachers) {
 		for (Teacher teacher : teachers) {
 			System.out.println(teacher);
 		}

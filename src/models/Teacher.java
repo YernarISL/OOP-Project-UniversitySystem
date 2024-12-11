@@ -9,7 +9,7 @@ public class Teacher extends Employee {
 	}
 	
 	public String toString() {
-		return getFullName() + " " + getUsername();
+		return "Full name: " + getFullName() + "\n" + "Username: " + getUsername();
 	}
 	
 }

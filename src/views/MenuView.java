@@ -2,6 +2,8 @@ package views;
 
 import java.util.Scanner;
 
+import controllers.MenuController; 
+
 public class MenuView {
 	Scanner in = new Scanner(System.in);
 	
@@ -11,9 +13,9 @@ public class MenuView {
 	}
 	
 	public void menuSelection() {
-		System.out.println("1.Login\n2.Register\n3.Exit");
+		System.out.println("1.Login\n2.Register\n3.Exit\n4.Show teachers");
 		System.out.println("===========================================================");
 		System.out.print("Enter your choice: ");
 	}
-	
+
 }

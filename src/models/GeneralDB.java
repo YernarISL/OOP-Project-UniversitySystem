@@ -13,10 +13,15 @@ public class GeneralDB implements Serializable {
 
 	private static String filePath = "C:\\Users\\Ernar\\eclipse-workspace\\alphaWSP\\data\\";
 	
-	public static Vector<Teacher> teachers = new Vector<Teacher>();
-	public static Vector<Student> students = new Vector<Student>();
-	public static Vector<Manager> managers = new Vector<Manager>();
-	public static Vector<Course> courses = new Vector<Course>();
+	public static GeneralDB db = new GeneralDB();
+	
+	public static Vector<Teacher> teachers;
+	public static Vector<Student> students;
+	public static Vector<Manager> managers;
+	
+	{
+		this.teachers = (Vector<Teacher>) deserialize("teachersList.txt");
+	}
 	
 	public static void saveTeachers() {
 		GeneralDB.serialize(teachers, "teachersList.txt");
@@ -29,7 +34,7 @@ public class GeneralDB implements Serializable {
 	public static void serialize(Object data, String fileName) {
 		FileOutputStream fos;
 		try {
-			fos = new FileOutputStream(getFilePath() + fileName);
+			fos = new FileOutputStream(getFilePath() + fileName, true);
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			oos.writeObject(data);
 			
@@ -59,6 +64,10 @@ public class GeneralDB implements Serializable {
 	
 	public static String getFilePath() {
 		return filePath;
+	}
+	
+	public static GeneralDB getDB() {
+		return db;
 	}
 
 }
