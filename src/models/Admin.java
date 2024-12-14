@@ -60,7 +60,7 @@ public class Admin extends User {
 				System.out.println("User name: " + entry.getKey());
 		    }
 		}
-	}  
+	}
 
 }
 

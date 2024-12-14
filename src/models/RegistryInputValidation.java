@@ -8,7 +8,7 @@ public interface RegistryInputValidation {
 	
 	public Date validateDateOfYearApp();
 	
-	public String validateFullName();
+	public String validateFullName(String fullName);
 	
-	public int validateAge();
+	public int validateAge(int age);
 }

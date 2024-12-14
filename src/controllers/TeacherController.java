@@ -22,12 +22,34 @@ public class TeacherController {
 		
 	}
 	
-	public Object getTeachers() {
-		return GeneralDB.deserialize("teachersList.txt");
+	public void logInToAccount(Teacher teacher) {
+		teacherView.teacherMenu(teacher);
 	}
 	
+	public Teacher checkForExistance(Vector<Teacher> teachers, String username) {
+		for (Teacher teacher : teachers) {
+			if (teacher.getUsername().equals(username)) {
+				return teacher;
+			}
+		}
+		return null;
+	}
+	
+	public boolean checkPasswordMatching(Vector<Teacher> teachers, String username, String password) {
+		if (checkForExistance(teachers, username).getPassword().equals(password)) {
+			return true;
+		}
+		return false;
+	}
+
+	
 	public void updateView() {
-		Vector<Teacher> teachers = (Vector<Teacher>) getTeachers();
+		Vector<Teacher> teachers = GeneralDB.getTeachers();
 		teacherView.displayTeachers(teachers);
+	}
+	
+	public void addInitTeachers() {
+		GeneralDB.teachers.add(new Teacher("Yerik", "5678trum", "Yernazar Shelek", new Date()));
+		GeneralDB.teachers.add(new Teacher("Pivozavr", "pg12", "Axa Kaizar", new Date()));
 	}
 }

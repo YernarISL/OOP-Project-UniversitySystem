@@ -13,7 +13,7 @@ public class MenuView {
 	}
 	
 	public void menuSelection() {
-		System.out.println("1.Login\n2.Register\n3.Exit\n4.Show teachers");
+		System.out.println("1.Login\n2.Register\n3.Exit\n4.Show teachers\n5.Show students");
 		System.out.println("===========================================================");
 		System.out.print("Enter your choice: ");
 	}

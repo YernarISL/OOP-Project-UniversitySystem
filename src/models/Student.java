@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Vector;
 
 public class Student extends User {
+	private static final long serialVersionUID = -4280982078902198112L;
 	private String fullName;
 	private Date yearOfApplication;
 	private Date dateOfBirth;
@@ -18,10 +19,22 @@ public class Student extends User {
 		this.age = age;
 	}
 	
+	public void registerForCourses() {
+		viewCourses();
+		
+	}
+	
 	public String viewCourses() {
 		return "";
 	}
-
+	
+	@Override
+	public String toString() {
+		String border = "-----------------------------------------------------------";
+		return border + "\n" + "Full name: " + fullName + "\n" + "Username: " + getUsername() + "\n" + "Age: " + 
+				age + "\n" + border; 
+	}
+	
 	public String getFullName() {
 		return fullName;
 	}

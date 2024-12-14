@@ -2,7 +2,11 @@ package controllers;
 
 import java.util.Date;
 import java.util.Scanner;
+import java.util.Vector;
 
+import models.GeneralDB;
+import models.Teacher;
+import models.Student;
 import views.MenuView;
 import views.LoginView;
 import views.RegistryView;
@@ -13,9 +17,10 @@ public class MenuController {
 	private RegistryView registryView = new RegistryView();
 	private LoginView loginView = new LoginView();
 	private MenuView menuView;
-	Scanner in = new Scanner(System.in);
 	private RegistryController registryController = new RegistryController(registryView);
 
+	Scanner in = new Scanner(System.in);
+	
 	public MenuController(MenuView menuView, TeacherController teacherController, StudentController studentController) {
 		this.teacherController = teacherController;
 		this.studentController = studentController;
@@ -32,42 +37,129 @@ public class MenuController {
 		int menuOption = in.nextInt();
 		switch(menuOption) {
 			case 1:
-//				loginController.updateView();
+				loginView.printLoginRole();
+				selectLoginRole();
 				break;
 			case 2:
 				registryView.printRegistryRole();
-				selectRole();
+				selectRegistryRole();
 				break;
 			case 3:
+				break;
+			case 4:
+				teacherController.updateView();
+				break;
+			case 5:
+				studentController.updateView();
+				break;
+			default:
 				break;
 		}
 	}
 	
-	public void selectRole() {
+	public void selectRegistryRole() {
 		int regRole = in.nextInt();
-		String validFullName, validUsername, validPassword;
-		Date validDateBirth, validDateYearApp;
-		int validAge;
+		String fullName, username, password;
+		Date dateBirth, dateYearApp;
+		int age;
 		switch(regRole) {
 			case 1:
-				validFullName = registryController.validateFullName();
-				validUsername = registryController.validateUsername();
-				validPassword = registryController.validatePassword();
-				validDateBirth = registryController.validateDateOfBirth();
-				validDateYearApp = registryController.validateDateOfYearApp();
-				validAge = registryController.validateAge();
+				fullName = registryView.fullName();
+				fullName = registryController.validateFullName(fullName);
+				username = registryView.username();
+				username = registryController.validateUsername(username);
+				password = registryView.password();
+				password = registryController.validatePassword(password);
+				dateBirth = registryController.validateDateOfBirth();
+				dateYearApp = registryController.validateDateOfYearApp();
+				age = registryView.age();
+				age = registryController.validateAge(age);
 				
-				studentController.createStudent(validFullName, validUsername, validPassword, validDateBirth, validDateYearApp, validAge);
+				studentController.createStudent(fullName, username, password, dateBirth, dateYearApp, age);
+				updateView();
 				break;
 			case 2:
-				validFullName = registryController.validateFullName();
-				validUsername = registryController.validateUsername();
-				validPassword = registryController.validatePassword();
-				validDateBirth = registryController.validateDateOfBirth();
+				fullName = registryView.fullName();
+				fullName = registryController.validateFullName(fullName);
+				username = registryView.username();
+				username = registryController.validateUsername(username);
+				password = registryView.password();
+				password = registryController.validatePassword(password);
+				dateBirth = registryController.validateDateOfBirth();
 				
-				teacherController.createTeacher(validFullName, validDateBirth, validUsername, validPassword);
+				teacherController.createTeacher(fullName, dateBirth, username, password);
 				updateView();
+				break;
 			case 3:
+				break;
+			case 4:
+				teacherController.updateView();
+				break;
+			default:
+				break;
+		}
+	}
+	
+	public void selectLoginRole() {
+		int logRole = in.nextInt();
+		String username;
+		String password;
+		switch (logRole) {
+			case 1: 
+				username = registryView.username();
+				username = registryController.validateUsername(username);
+				password = registryView.password();
+				password = registryController.validatePassword(password);
+				Student student;
+				while (true) {
+					student = studentController.checkForExistance(GeneralDB.getStudents(), username);
+					if (student != null) {
+						boolean isCorrect = studentController.checkPasswordMatching(GeneralDB.getStudents(), username, password);
+						if (isCorrect) {
+							break;
+						} else {
+							System.out.println("The password is incorrect");
+							password = registryView.password();
+							password = registryController.validatePassword(password);
+						}
+					} else {
+						System.out.println("The user doesn't exist");
+						username = registryView.username();
+						username = registryController.validateUsername(username);
+					}
+				}
+				studentController.logInToAccount(student);
+				break;
+			case 2:
+				username = registryView.username();
+				username = registryController.validateUsername(username);
+				password = registryView.password();
+				password = registryController.validatePassword(password);
+				Teacher teacher;
+				while (true) {
+					teacher = teacherController.checkForExistance(GeneralDB.getTeachers(), username);
+					if (teacher != null) {
+						boolean isCorrect = teacherController.checkPasswordMatching(GeneralDB.getTeachers(), username, password);
+						if (isCorrect) {
+							break;
+						} else {
+							System.out.println("The password is incorrect");
+							password = registryView.password();
+							password = registryController.validatePassword(password);
+						}
+					} else {
+						System.out.println("The user doesn't exist");
+						username = registryView.username();
+						username = registryController.validateUsername(username);
+					} 
+				}
+				teacherController.logInToAccount(teacher);
+				break;
+			case 3:
+				break;
+			case 4:
+				selectMenuAction();
+			default:
 				break;
 		}
 	}

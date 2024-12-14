@@ -49,8 +49,7 @@ public class RegistryController implements RegistryInputValidation, LoginInputVa
 	}
 	
 	@Override
-	public String validateFullName() {
-		String fullName = registryView.fullName();
+	public String validateFullName(String fullName) {
 		while (true) {
 			if (!fullName.isEmpty()) {
 				break;
@@ -63,8 +62,7 @@ public class RegistryController implements RegistryInputValidation, LoginInputVa
 	}
 
 	@Override
-	public String validatePassword() {
-		String password = registryView.password();
+	public String validatePassword(String password) {
 		while (true) {
 			if (password.length() >= 6) {
 				break;
@@ -77,8 +75,7 @@ public class RegistryController implements RegistryInputValidation, LoginInputVa
 	}
 
 	@Override
-	public String validateUsername() {
-		String username = registryView.username();
+	public String validateUsername(String username) {
 		while (true) {
 			if (!username.isEmpty()) {
 				break;
@@ -91,8 +88,7 @@ public class RegistryController implements RegistryInputValidation, LoginInputVa
 	}
 	
 	@Override
-	public int validateAge() {
-		int age = registryView.age();
+	public int validateAge(int age) {
 		while (true) {
 			if (age >= 0 && age <= 120) {
 				break;
