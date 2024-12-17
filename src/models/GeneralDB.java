@@ -1,8 +1,6 @@
 package models;
 
 import java.util.Vector;
-import java.util.HashMap;
-
 
 public class GeneralDB {
 
@@ -10,12 +8,16 @@ public class GeneralDB {
 	
 	public static Vector<Teacher> teachers = new Vector<Teacher>();
 	public static Vector<Student> students = new Vector<Student>();
-	public static Vector<Manager> managers;
-	public static HashMap<String, Course> courses = new HashMap<String, Course>();
+	public static Vector<Manager> managers = new Vector<Manager>();
+	public static Vector<Course> courses = new Vector<Course>();
+
+	
+	{
+		students = getStudents();
+	}
 	
 	public static Vector<Teacher> getTeachers() {
 		Object obj = ReadAndWrite.deserialize(filePath + "teachersList.txt");
-		
 		if (obj instanceof Vector) {
 			return (Vector<Teacher>) obj;
 		
@@ -27,19 +29,26 @@ public class GeneralDB {
 		Object obj = ReadAndWrite.deserialize(filePath + "studentsList.txt");
 		if (obj instanceof Vector) {
 			return (Vector<Student>) obj;
-		
 		}
 		return null;
 	}
 	
-	public static HashMap<String, Course> getCourses() {
-		Object obj = ReadAndWrite.deserialize(filePath + "coursesList.txt");
-		
-		if (obj instanceof HashMap) {
-			return (HashMap<String, Course>) obj;
+	public static Vector<Manager> getManagers() {
+		Object obj = ReadAndWrite.deserialize(filePath + "managersList.txt");
+		if (obj instanceof Vector) {
+			return (Vector<Manager>) obj;
 		}
 		return null;
 	}
+	
+	public static Vector<Course> getCourses() {
+		Object obj = ReadAndWrite.deserialize(filePath + "coursesList.txt");
+		if (obj instanceof Vector) {
+			return (Vector<Course>) obj;
+		}
+		return null;
+	}
+	
 	
 	public static void saveTeachers() {
 		ReadAndWrite.serialize(teachers, filePath + "teachersList.txt");
@@ -51,5 +60,13 @@ public class GeneralDB {
 	
 	public static void saveCourses() {
 		ReadAndWrite.serialize(courses, filePath + "coursesList.txt");
+	}
+	
+	public static void saveManagers() {
+		ReadAndWrite.serialize(managers, filePath + "managersList.txt");
+	}
+	
+	public static String getPath() {
+		return filePath;
 	}
 }

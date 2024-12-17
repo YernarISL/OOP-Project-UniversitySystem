@@ -5,26 +5,31 @@ import java.util.Vector;
 
 public class Course implements Serializable {
 	private static final long serialVersionUID = -7714649813359724398L;
-	private String courseCode;
+	private String courseID;
 	private String courseName;
 	private int credits;
 	private Semester semester; 
 	private Vector<Teacher> listOfTeachers = new Vector<Teacher>();
 	private Vector<Student> listOfStudents = new Vector<Student>();
 	
-	public Course(String courseCode, String courseName, int credits, Semester semester) {
-		this.courseCode = courseCode;
+	public Course(String courseID, String courseName, int credits, Semester semester) {
+		this.courseID = courseID;
 		this.courseName = courseName;
 		this.credits = credits;
 		this.semester = semester;
 	}
 	
+	@Override 
+	public String toString() {
+		return courseID + "     " + courseName;
+	}
+	
 	public String getCourseCode() {
-		return courseCode;
+		return courseID;
 	}
 
-	public void setCourseCode(String courseCode) {
-		this.courseCode = courseCode;
+	public void setCourseCode(String courseID) {
+		this.courseID = courseID;
 	}
 
 	public int getCredits() {

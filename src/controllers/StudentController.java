@@ -1,14 +1,13 @@
 package controllers;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Vector;
 
 import models.Course;
 import models.Student;
 import models.GeneralDB;
-
+import models.BaseState;
 import views.StudentView;
 import views.CourseView;
 
@@ -22,59 +21,83 @@ public class StudentController {
 		this.courseView = courseView;
 	}
 	
-	public void createStudent(String fullName, String username, String password, Date date, Date yearOfApplication, int age) {
-		Student student = new Student(fullName, username, password, date, yearOfApplication, age);
-		GeneralDB.students.add(student);
-		GeneralDB.saveStudents();
-	}
-	
-	public void logInToAccount(Student student) {
+	public BaseState loginToAccount(Student student) {
 		studentView.studentMenu(student);
-		selectStudentAction();
+		return selectStudentAction(student);
 	}
 	
-	public void selectStudentAction() {
+	public BaseState selectStudentAction(Student student) {
 		int option = in.nextInt();
 		
 		switch (option) {
 			case 1:
-				break;
+				studentView.displayMarks(student.viewMarks());
+				return BaseState.STUDENT_CABINET;
 			case 2:
-				break;
+				if (student.checkForEmptyCourses(student.getSelectedCourses())) {
+					System.out.println("No courses");
+				} else {
+	 				studentView.displayCourses(student.getSelectedCourses());
+				}
+				return BaseState.STUDENT_CABINET;
 			case 3:
-				break;
+				return BaseState.STUDENT_CABINET;
 			case 4:
-				break;
+				return BaseState.STUDENT_CABINET;
 			case 5:
-				break;
+				return BaseState.STUDENT_CABINET;
 			case 6:
-				HashMap<String, Course> courses = GeneralDB.getCourses();
-				courseView.registryMenu(courses);
-				break;
+				Vector<Course> courses = GeneralDB.getCourses();
+				while (true) {
+					courseView.registryPanel(courses);
+					int courseOption = in.nextInt();
+					if (student.selectCourses(courseOption, courses)) {
+						System.out.println("Registration for the course was successful!");
+						break;
+					} else {
+						System.out.println("Wrong Input. Try Again");
+					}
+				}
+				return BaseState.STUDENT_CABINET;
 			case 7:
-				break;
+				return BaseState.STUDENT_CABINET;
 			case 8:
-				break;
+				return BaseState.BACK_TO_MENU;
+			default:
+				System.out.println("Incorrect input\n");
 		}
+		return BaseState.BACK_TO_MENU;
 	}
 	
-	public Student checkForExistance(Vector<Student> students, String username) {
-		for (Student student : students) {
-			if (student.getUsername().equals(username)) {
-				return student;
-			}
-		}
-		return null;
+	public void setRegisterData(String fullName, String username, String password, Date date, Date yearOfApplication) {
+		Student.createStudent(fullName, username, password, date, yearOfApplication);
 	}
 	
-	public boolean checkPasswordMatching(Vector<Student> students, String username, String password) {
-		if (checkForExistance(students, username).getPassword().equals(password)) {
-			return true;
-		}
-		return false;
+	public Student getStudent(String username, String password) {
+		return Student.getStudent(username, password);
 	}
 	
-	public void updateView() {
+	public String getUsername(String username) {
+		return Student.validateUsername(username);
+	}
+	
+	public String getPassword(String password) {
+		return Student.validatePassword(password);
+	}
+	
+	public String getFullName(String fullName) {
+		return Student.validateFullName(fullName);
+	}
+	
+	public Date getBirthDate(String dateBirth) {
+		return Student.validateBirthDate(dateBirth);
+	}
+	
+	public Date getYearAppDate(Date dateBirth, String dateYearApp) {
+		return Student.validationYearAppDate(dateBirth, dateYearApp);
+	}
+	
+	public void updateView() { 
 		Vector<Student> students = GeneralDB.getStudents(); 
 		studentView.displayStudents(students);
 	}

@@ -13,7 +13,7 @@ public class TeacherView {
 	public void teacherMenu(Teacher teacher) {
 		System.out.println("Welcome, " + teacher.getFullName());
 		System.out.println("===========================================================");
-		System.out.println("1.View Courses\n2.Manage Courses\n3.View info about student\n4.Put marks\n5.Send message");
+		System.out.println("1.View Courses\n2.Manage Courses\n3.View info about student\n4.Put marks\n5.Send message\n6.Log out");
 	}
 	
 	public void displayTeachers(Vector<Teacher> teachers) {

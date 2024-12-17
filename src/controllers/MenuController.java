@@ -2,58 +2,61 @@ package controllers;
 
 import java.util.Date;
 import java.util.Scanner;
-import java.util.Vector;
 
-import models.GeneralDB;
+import models.Manager;
 import models.Teacher;
 import models.Student;
+import models.BaseState;
+
 import views.MenuView;
-import views.LoginView;
-import views.RegistryView;
+import views.InputView;
 
 public class MenuController {
 	private TeacherController teacherController;
 	private StudentController studentController;
-	private RegistryView registryView = new RegistryView();
-	private LoginView loginView = new LoginView();
+	private ManagerController managerController;
 	private MenuView menuView;
-	private RegistryController registryController = new RegistryController(registryView);
-
+	
+	private boolean running = true;
+	
 	Scanner in = new Scanner(System.in);
 	
-	public MenuController(MenuView menuView, TeacherController teacherController, StudentController studentController) {
+	public MenuController(MenuView menuView, TeacherController teacherController, StudentController studentController, ManagerController managerController) {
 		this.teacherController = teacherController;
 		this.studentController = studentController;
+		this.managerController = managerController;
 		this.menuView = menuView;
 	}
 	
-	public void updateView() {
-		menuView.printHeader();
-		menuView.menuSelection();
-		selectMenuAction();
-	}
-	
 	public void selectMenuAction() {
-		int menuOption = in.nextInt();
-		switch(menuOption) {
-			case 1:
-				loginView.printLoginRole();
-				selectLoginRole();
-				break;
-			case 2:
-				registryView.printRegistryRole();
-				selectRegistryRole();
-				break;
-			case 3:
-				break;
-			case 4:
-				teacherController.updateView();
-				break;
-			case 5:
-				studentController.updateView();
-				break;
-			default:
-				break;
+		while (running) {
+			menuView.printHeader();
+			menuView.menuSelection();
+			int menuOption = in.nextInt();
+			switch(menuOption) {
+				case 1:
+					menuView.printLoginRole();
+					selectLoginRole();
+					break;
+				case 2:
+					menuView.printRegistryRole();
+					selectRegistryRole();
+					break;
+				case 3:
+					running = false;
+					break;
+				case 4:
+					teacherController.updateView();
+					break;
+				case 5:
+					studentController.updateView();
+					break;
+				case 6:
+					managerController.updateView();
+				default:
+					System.out.println("Incorrect Input. Try again");
+					break;
+			}
 		}
 	}
 	
@@ -61,106 +64,125 @@ public class MenuController {
 		int regRole = in.nextInt();
 		String fullName, username, password;
 		Date dateBirth, dateYearApp;
-		int age;
 		switch(regRole) {
 			case 1:
-				fullName = registryView.fullName();
-				fullName = registryController.validateFullName(fullName);
-				username = registryView.username();
-				username = registryController.validateUsername(username);
-				password = registryView.password();
-				password = registryController.validatePassword(password);
-				dateBirth = registryController.validateDateOfBirth();
-				dateYearApp = registryController.validateDateOfYearApp();
-				age = registryView.age();
-				age = registryController.validateAge(age);
+				fullName = studentController.getFullName(InputView.getFullName());
 				
-				studentController.createStudent(fullName, username, password, dateBirth, dateYearApp, age);
-				updateView();
+				username = studentController.getUsername(InputView.getUsername());
+				
+				password = studentController.getPassword(InputView.getPassword());
+				
+				dateBirth = studentController.getBirthDate(InputView.getBirthDate());
+				
+				dateYearApp = studentController.getYearAppDate(dateBirth, InputView.getYearAppDate());
+				
+				studentController.setRegisterData(fullName, username, password, dateBirth, dateYearApp);
+				
+				selectMenuAction();
 				break;
 			case 2:
-				fullName = registryView.fullName();
-				fullName = registryController.validateFullName(fullName);
-				username = registryView.username();
-				username = registryController.validateUsername(username);
-				password = registryView.password();
-				password = registryController.validatePassword(password);
-				dateBirth = registryController.validateDateOfBirth();
+				fullName = teacherController.getFullName(InputView.getFullName());
 				
-				teacherController.createTeacher(fullName, dateBirth, username, password);
-				updateView();
+				username = teacherController.getUsername(InputView.getUsername());
+				
+				password = teacherController.getPassword(InputView.getPassword());
+				
+				dateBirth = teacherController.getBirthDate(InputView.getBirthDate());
+				
+				teacherController.setRegisterData(fullName, dateBirth, username, password);
+				
+				selectMenuAction();
 				break;
 			case 3:
+				fullName = managerController.getFullName(InputView.getFullName());
+
+				username = managerController.getUsername(InputView.getUsername());
+				
+				password = managerController.getPassword(InputView.getPassword());
+
+				dateBirth = managerController.getBirthDate(InputView.getBirthDate());
+				
+				managerController.setRegisterData(fullName, dateBirth, username, password);
+				
+				selectMenuAction();
 				break;
 			case 4:
-				teacherController.updateView();
 				break;
 			default:
+				System.out.println("Incorrect Input. Try again");
+				selectRegistryRole();
 				break;
 		}
 	}
 	
 	public void selectLoginRole() {
 		int logRole = in.nextInt();
-		String username;
-		String password;
+		String username, password;
+		BaseState state;
 		switch (logRole) {
 			case 1: 
-				username = registryView.username();
-				username = registryController.validateUsername(username);
-				password = registryView.password();
-				password = registryController.validatePassword(password);
-				Student student;
+				username = studentController.getUsername(InputView.getUsername());
+				
+				password = studentController.getPassword(InputView.getPassword());
+				
+				Student student = studentController.getStudent(username, password);
+				
+				state = studentController.loginToAccount(student);
+				
 				while (true) {
-					student = studentController.checkForExistance(GeneralDB.getStudents(), username);
-					if (student != null) {
-						boolean isCorrect = studentController.checkPasswordMatching(GeneralDB.getStudents(), username, password);
-						if (isCorrect) {
-							break;
-						} else {
-							System.out.println("The password is incorrect");
-							password = registryView.password();
-							password = registryController.validatePassword(password);
-						}
-					} else {
-						System.out.println("The user doesn't exist");
-						username = registryView.username();
-						username = registryController.validateUsername(username);
+					if (state == BaseState.BACK_TO_MENU) {
+						break;
+					} else if (state == BaseState.STUDENT_CABINET) {
+						state = studentController.loginToAccount(student);
 					}
 				}
-				studentController.logInToAccount(student);
+				selectMenuAction();
 				break;
 			case 2:
-				username = registryView.username();
-				username = registryController.validateUsername(username);
-				password = registryView.password();
-				password = registryController.validatePassword(password);
-				Teacher teacher;
+				username = teacherController.getUsername(InputView.getUsername());
+				
+				password = teacherController.getPassword(InputView.getPassword());
+				
+				Teacher teacher = teacherController.getTeacher(username, password);
+				
+				state = teacherController.loginToAccount(teacher);
+				
 				while (true) {
-					teacher = teacherController.checkForExistance(GeneralDB.getTeachers(), username);
-					if (teacher != null) {
-						boolean isCorrect = teacherController.checkPasswordMatching(GeneralDB.getTeachers(), username, password);
-						if (isCorrect) {
-							break;
-						} else {
-							System.out.println("The password is incorrect");
-							password = registryView.password();
-							password = registryController.validatePassword(password);
-						}
-					} else {
-						System.out.println("The user doesn't exist");
-						username = registryView.username();
-						username = registryController.validateUsername(username);
-					} 
+					if (state == BaseState.BACK_TO_MENU) {
+						break;
+					} else if (state == BaseState.TEACHER_CABINET) {
+						state = teacherController.loginToAccount(teacher);
+					}
 				}
-				teacherController.logInToAccount(teacher);
+				selectMenuAction();
 				break;
 			case 3:
+				username = managerController.getUsername(InputView.getUsername());
+				
+				password = managerController.getPassword(InputView.getPassword());
+				
+				Manager manager = managerController.getManager(username, password);
+				
+				state = managerController.loginToAccount(manager);
+				
+				while (true) {
+					if (state == BaseState.BACK_TO_MENU) {
+						break;
+					} else if (state == BaseState.MANAGER_CABINET) {
+						state = managerController.loginToAccount(manager);
+					}
+				}
+				selectMenuAction();
 				break;
 			case 4:
 				selectMenuAction();
+				break;
 			default:
+				System.out.println("Incorrect Input. Try again");
+				selectLoginRole();
 				break;
 		}
 	}
+	
+
 }
